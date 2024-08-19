@@ -27,14 +27,14 @@
                         <div class="card-body">
                             <p><strong>{{__('template.roles')}}:</strong> {{ $role->name }}</p>
 
-                    <form action="{{ url('/roles/' . $role->id . '/rolepermission') }}" method="POST">
+                    <form action="{{ url('settings/roles/' . $role->id . '/rolepermission') }}" method="POST">
                         @csrf
                         @method('POST')
 
                         <div class="grid grid-cols-4 gap-4">
                             @foreach ($permissions as $permission)
                                 <div class="col">
-                                    <x-input-label for="name" value="{{ $permission->name }}" />
+                                    <label for="name" value="">{{ $permission->name }}</label>
                                     <input type="checkbox" name="permission[]" value="{{ $permission->name }}"
                                         {{ in_array($permission->id, $rolepermissions) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     {{-- <x-text-input id="name" name="permission[]" value="{{$permission->name}}" type="checkbox" :checked="in_array($permission->id, $rolepermissions) ? 'true' : 'false'" /> --}}
