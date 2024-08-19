@@ -22,14 +22,14 @@
                             <br>
                             <h5 class="mb-2"><i class="fa fa-edit"></i>{{__('template.provide_information_for_registration')}}</h5>
                            
-                            <a href="{{ url('/users/' .$user->id ) }}" class="btn btn-primary"><i class="fa fa-arrow-left nav-icon"></i>{{__('text.go_back')}}</a>
+                            <a href="{{ url('/settings/users/' .$user->id ) }}" class="btn btn-primary"><i class="fa fa-arrow-left nav-icon"></i>{{__('text.go_back')}}</a>
 
                         </div>
                         <div class="card-body">
                             <p><strong>Usuarios</strong>: {{ $user->name }}</p>
                             <p><strong>Email</strong>: {{ $user->email }}</p>
         
-                            <form action="{{ url('/users/' . $user->id . '/permissions') }}" method="POST">
+                            <form action="{{ url('/settings/users/' . $user->id . '/permissions') }}" method="POST">
                                 @csrf
                                 @method('POST')
                                 <div class="grid grid-cols-4 gap-4">

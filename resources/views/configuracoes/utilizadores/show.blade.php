@@ -29,7 +29,7 @@
                             <p><strong>{{__('text.name')}} </strong>: {{ $user->name }}</p>
                             <p><strong>{{__('text.email')}} </strong>: {{ $user->email }}</p>
 
-                            <a href="{{ url('users/' . $user->id . '/roles') }}"
+                            <a href="{{ url('settings/users/' . $user->id . '/roles') }}"
                                 class="mt-4 mb-4 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25">
                                 {{__('template.add_edit')}} {{__('template.roles')}}<i class="fas fa-plus"></i>
                             </a>
@@ -42,7 +42,7 @@
                                 @endforelse
                             </p>
 
-                            <a href="{{ url('users/' . $user->id . '/permissions') }}"
+                            <a href="{{ url('settings/users/' . $user->id . '/permissions') }}"
                                 class="mt-4 mb-4 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25">
                                 {{__('template.add_edit')}} {{__('template.permissions')}} <i class="fas fa-plus"></i>
                             </a>
