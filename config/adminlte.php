@@ -295,15 +295,15 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+        // [
+        //     'type' => 'navbar-search',
+        //     'text' => 'search',
+        //     'topnav_right' => true,
+        // ],
+        // [
+        //     'type' => 'fullscreen-widget',
+        //     'topnav_right' => true,
+        // ],
 
         // Sidebar items:
         // [
@@ -322,76 +322,93 @@ return [
             'url' => 'dashboard',
             'icon' => 'fas fa-fw fa-home',
         ],
-        ['header' => 'modules'],
+        ['header' => 'modules','can'=>'credentials',],
         [
             'text' => 'credentials',
             'icon' => 'fas fa-fw fa-user',
+            'can'=>'credential',
             'submenu' => [
                 [
                     'text' => 'pending',
                     'icon' => 'fas fa-fw fa-lock',
                     'url' => '#',
+                    'can'=>'approveCredential',
                 ],
                 [
                     'text' => 'approved',
                     'icon' => 'fas fa-fw fa-check',
                     'url' => '#',
+                    'can'=>'approvedCredential',
+
                 ],
                 [
                     'text' => 'denied',
                     'icon' => 'fas fa-fw fa-cross',
                     'url' => '#',
+                    'can'=>'rejectedCredential',
+
                 ]
             ],
         ],
         [
             'text' => 'port_access',
             'icon' => 'fas fa-fw fa-wrench',
+            'can' =>'portAccess',
             'submenu' => [
                 [
                     'text' => 'vehicles',
                     'icon' => 'fas fa-fw fa-user',
+                    'can'=>'car',
                     'submenu' => [
                         [
                             'text' => 'new',
                             'icon' => 'fas fa-fw fa-plus',
                             'url' => '#',
+                            'can'=>'addCar',
                         ],
                         [
                             'text' => 'list',
                             'icon' => 'fas fa-fw fa-list',
                             'url' => '#',
+                            'can'=>'listCar',
                         ],
                     ]
                 ],
                 [
                     'text' => 'users',
                     'icon' => 'fas fa-fw fa-user',
+                    'can'=>'customer',
                     'submenu' => [
                         [
                             'text' => 'new',
                             'icon' => 'fas fa-fw fa-plus',
                             'url' => '#',
+                            'can'=>'addCustomer',
                         ],
                         [
                             'text' => 'list',
                             'icon' => 'fas fa-fw fa-list',
                             'url' => '#',
+                            'can'=>'listCustomer',
                         ],
                         [
                             'text' => 'import',
                             'icon' => 'fas fa-fw fa-arrow-up',
                             'url' => '#',
+                            'can'=>'importCustomer',
                         ],
                         [
                             'text' => 'internal_card',
                             'icon' => 'fas fa-fw fa-address-card',
                             'url' => '#',
+                            'can'=>'internalCardCustomer',
                         ],
                         [
                             'text' => 'external_card',
                             'icon' => 'fas fa-fw fa-address-card',
                             'url' => '#',
+                            'can'=>'externalCardCustomer',
+
                         ],
                     ]
                 ],
@@ -403,30 +420,35 @@ return [
                             'text' => 'induction',
                             'icon' => 'fas fa-fw fa-plus',
                             'url' => '#',
+                            'can'=>'requests',
                         ],
                         [
                             'text' => 'induced',
                             'icon' => 'fas fa-fw fa-list',
                             'url' => '#',
+                            'can'=>'induction',
                         ],
                         [
                             'text' => 'denied',
                             'icon' => 'fas fa-fw fa-list',
                             'url' => '#',
+                            'can'=>'request-rejected',
                         ],
                         [
                             'text' => 'transactions',
                             'icon' => 'fas fa-fw fa-list',
                             'url' => '#',
+                            'can'=>'transactions',
                         ],
                     ]
                 ],
             ],
         ],
-        ['header' => 'Cornelder de Moçambique'],
+        ['header' => 'Cornelder de Moçambique','can'=>'user'],
         [
             'text' => 'system',
             'icon' => 'fas fa-fw fa-user',
+            'can'=>'user',
             'submenu' => [
                 [
                     'text' => 'request',
@@ -443,6 +465,7 @@ return [
         [
             'text' => 'vehicles',
             'icon' => 'fas fa-fw fa-car',
+            'can'=>'vehicle',
             'submenu' => [
                 [
                     'text' => 'class',
@@ -481,6 +504,7 @@ return [
         [
             'text' => 'activities',
             'icon' => 'fas fa-fw fa-file',
+            'can'=>'activities',
             'submenu' => [
                 [
                     'text' => 'new',
@@ -494,10 +518,11 @@ return [
                 ],
             ]
         ],
-        ['header' => 'departments'],
+        ['header' => 'departments','can'=>'departments'],
         [
             'text' => 'departments',
             'icon' => 'fas fa-fw fa-book',
+            'can'=>'departments',
             'submenu' => [
                 [
                     'text' => 'new',
@@ -521,14 +546,16 @@ return [
                 ],
             ]
         ],
-        ['header' => 'super_administrator'],
+        ['header' => 'super_administrator','can'=>'configuration',],
         [
             'text' => 'settings',
             'icon' => 'fas fa-fw fa-wrench',
+            'can'=>'configuration',
             'submenu' => [
                 [
                     'text' => 'roles',
                     'icon' => 'fas fa-fw fa-user',
+                    'can'=>'roles',
                     'submenu' => [
                         [
                             'text' => 'new',
@@ -545,11 +572,13 @@ return [
                 [
                     'text' => 'permissions',
                     'icon' => 'fas fa-fw fa-user',
+                    'can'=>'configuration',
                     'submenu' => [
                         [
                             'text' => 'new',
                             'icon' => 'fas fa-fw fa-plus',
                             'url' => 'settings/permissions/create',
+                            
                         ],
                         [
                             'text' => 'list',
@@ -561,6 +590,7 @@ return [
                 [
                     'text' => 'users',
                     'icon' => 'fas fa-fw fa-user',
+                    'can'=>'users',
                     'submenu' => [
                         [
                             'text' => 'new',
@@ -716,21 +746,21 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
             ],
@@ -751,7 +781,7 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

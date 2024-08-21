@@ -22,55 +22,62 @@
                             <h5 class="mb-1">{{ __('template.below_is_the_recorded_information') }}</h5>
 
                             <a href="{{route('permissions.create')}}" class="btn btn-primary"><i class="fa fa-plus nav-icon"></i> {{ __('template.new_record') }} </a>
+                           
+                          
                         </div>
                         <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>{{ __('text.name') }}</th>
-                                        <th>{{ __('text.created_at') }}</th>
-                                        <th>{{ __('text.actions') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($permissions as $item)
-                                        <tr class="bg-white">
-                                            <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                                {{ $item->name }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                                {{ $item->created_at->format('Y-m-d H:i') }}
-                                            </td>
-                                            
+                            <div class="table-responsive">
 
-                                            <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                        
-                                                <a href="{{ route('permissions.edit', $item) }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                
-                                                <a href="{{ route('permissions.show', $item) }}">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-
-                                                <a href="#" x-data=""
-                                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion{{ $item->id }}')">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
-                                            @include('configuracoes.permissoes.partials.modal-delete')
+                            
+                                <table id="table1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __('text.name') }}</th>
+                                            <th>{{ __('text.created_at') }}</th>
+                                            <th>{{ __('text.actions') }}</th>
                                         </tr>
-                                        
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>{{ __('text.name') }}</th>
-                                        <th>{{ __('text.created_at') }}</th>
-                                        <th>{{ __('text.actions') }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($permissions as $item)
+                                            <tr class="bg-white">
+                                                <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                                    {{ $item->name }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                                    {{ $item->created_at->format('Y-m-d H:i') }}
+                                                </td>
+                                                
+
+                                                <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            
+                                                    <a href="{{ route('permissions.edit', $item) }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    
+                                                    <a href="{{ route('permissions.show', $item) }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+
+                                                    <a href="#" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion{{ $item->id }}')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                                @include('configuracoes.permissoes.partials.modal-delete')
+                                            </tr>
+                                            
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>{{ __('text.name') }}</th>
+                                            <th>{{ __('text.created_at') }}</th>
+                                            <th>{{ __('text.actions') }}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

@@ -6,11 +6,19 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-class RolesController extends Controller
+class RolesController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            'role_or_permission: Super Admin|roles',
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -41,14 +49,19 @@ class RolesController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-        $request->validate([
-            'name' => ['required','string','max:255','unique:roles,name'],
-        ]);
-        $data = $request->all();
-        Role::create($data);
-
-        // return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
-        return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
+        try {
+            $request->validate([
+                'name' => ['required','string','max:255','unique:roles,name'],
+            ]);
+            $data = $request->all();
+            Role::create($data);
+            Alert::success('Success', __('text.success_save'));
+            return to_route('roles.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_save').'. '.$th->getMessage());
+            return to_route('roles.index');  
+        }
+        
 
     }
 
@@ -85,12 +98,17 @@ class RolesController extends Controller
     public function update(Request $request, string $id) : RedirectResponse
     {
         //
-        $data = $request->all();
-        $role = Role::findOrFail($id);
-        $role->update($data);
-
-        // return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
-        return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
+        try {
+            $data = $request->all();
+            $role = Role::findOrFail($id);
+            $role->update($data);
+            Alert::success('Success', __('text.success_update'));
+            return to_route('roles.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_update').'. '.$th->getMessage());
+            return to_route('roles.index');  
+        }
+        
 
     }
 
@@ -100,10 +118,16 @@ class RolesController extends Controller
     public function destroy(string $id)
     {
         //
-        $role = Role::findOrFail($id);
-        $role->delete();
-        // return to_route('roles.index')->with('messagesuccess','Registro apagado com sucesso');
-        return to_route('configuracoes.previlegios.index')->with('messagesuccess','Registro apagado com sucesso');;
+        try {
+            $role = Role::findOrFail($id);
+            $role->delete();
+            Alert::success('Success', __('text.success_delete'));
+            return to_route('roles.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_delete').'. '.$th->getMessage());
+            return to_route('roles.index');
+        }
+        
 
     }
 
@@ -112,24 +136,29 @@ class RolesController extends Controller
         $permissions = Permission::all();
         $role = Role::findOrFail($id);
         $rolepermissions = DB::table('role_has_permissions')->where('role_id',$role->id)->pluck('permission_id')->all();        
-        // return view('roles.addpermission', compact('role','permissions','rolepermissions'));
         return view('configuracoes.previlegios.addpermission', compact('role','permissions','rolepermissions'));
 
     }
 
     public function storeRolePermission(string $id , Request $request) : RedirectResponse
     {
-        $request->validate([
-            'permission' =>'required',
-        ]);
 
-        $data = $request->all();
-        $role = Role::findOrFail($id);
-
-        $role->syncPermissions($data['permission']);
-
-        // return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
-        return to_route('roles.index')->with('messagesuccess','Registro criado com sucesso');
+        try {
+            $request->validate([
+                'permission' =>'required',
+            ]);
+    
+            $data = $request->all();
+            $role = Role::findOrFail($id);
+    
+            $role->syncPermissions($data['permission']);
+            Alert::success('Success', __('text.success_save'));
+            return to_route('roles.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_delete').'. '.$th->getMessage());
+            return to_route('roles.index');
+        }
+        
 
     }
 
@@ -139,24 +168,29 @@ class RolesController extends Controller
         $roles = Role::all();
 
         $rolesuser = DB::table('model_has_roles')->where('model_id', $user->id)->pluck('role_id')->all();
-        // return view('users.roles.edit', compact('roles','user','rolesuser'));
         return view('configuracoes.utilizadores.previlegios.edit', compact('roles','user','rolesuser'));
 
     }
 
     public function storeRoleToUser(string $id , Request $request) : RedirectResponse
     {
-        $request->validate([
-            'role' =>'required',
-        ]);
-
-        $data = $request->all();
-        $user = User::findOrFail($id);
-
-        $user->syncRoles($data['role']);
-
-        // return redirect()->back();
-        return redirect()->back();
+        try {
+            $request->validate([
+                'role' =>'required',
+            ]);
+    
+            $data = $request->all();
+            $user = User::findOrFail($id);
+    
+            $user->syncRoles($data['role']);
+    
+            Alert::success('Success', __('text.success_save'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_save').'. '.$th->getMessage());
+            return to_route('roles.index');
+        }
+        
 
     }
 

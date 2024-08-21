@@ -1,5 +1,4 @@
 @extends('adminlte::page')
-
 {{-- Extend and customize the browser title --}}
 
 @section('title')
@@ -27,6 +26,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
+    @include('sweetalert::alert')
     @yield('content_body')
 @stop
 
@@ -51,6 +51,9 @@
 
     $(document).ready(function() {
         // Add your common script logic here...
+        $(() => {
+            $('#table1').DataTable();
+        })
     });
 
 </script>

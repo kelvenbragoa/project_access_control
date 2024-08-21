@@ -19,7 +19,9 @@ Route::middleware('auth')->group(function () {
    
 
 
-Route::group(['middleware' => ['role:admin']], function () {
+// Route::group(['middleware' => ['role:admin']], function () {
+Route::group([],function () {
+
     Route::prefix('credentials')->group(function () {
 
     });

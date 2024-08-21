@@ -6,11 +6,19 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
 
-class PermissionController extends Controller
+class PermissionController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            'role_or_permission: Super Admin|permissions',
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -38,10 +46,19 @@ class PermissionController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-        $data = $request->all();
-        Permission::create($data);
-
-        return to_route('permissions.index')->with('messagesuccess','Registro criado com sucesso');;
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+            ]);
+            $data = $request->all();
+            Permission::create($data);
+            Alert::success('Success', __('text.success_save'));
+            return to_route('permissions.index');        
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_save').'. '.$th->getMessage());
+            return to_route('permissions.index');      
+        }
+        
     }
 
     /**
@@ -72,11 +89,17 @@ class PermissionController extends Controller
     public function update(Request $request, string $id) : RedirectResponse
     {
         //
-        $data = $request->all();
-        $permission = Permission::findOrFail($id);
-        $permission->update($data);
-
-        return to_route('permissions.index')->with('messagesuccess','Registro criado com sucesso');;
+        try {
+            $data = $request->all();
+            $permission = Permission::findOrFail($id);
+            $permission->update($data);
+            Alert::success('Success', __('text.success_update'));
+            return to_route('permissions.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_update').'. '.$th->getMessage());
+            return to_route('permissions.index');   
+        }
+       
     }
 
     /**
@@ -85,9 +108,16 @@ class PermissionController extends Controller
     public function destroy(string $id)
     {
         //
-        $permission = Permission::findOrFail($id);
-        $permission->delete();
-        return to_route('permissions.index')->with('messagesuccess','Registro criado com sucesso');;
+        try {
+            $permission = Permission::findOrFail($id);
+            $permission->delete();
+            Alert::success('Success', __('text.success_delete'));
+            return to_route('permissions.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_delete').'. '.$th->getMessage());
+            return to_route('permissions.index');
+        }
+        
     }
 
 
@@ -102,15 +132,21 @@ class PermissionController extends Controller
 
     public function storePermissionToUser(string $id , Request $request) : RedirectResponse
     {
-        $request->validate([
-            'permission' =>'required',
-        ]);
-
-        $data = $request->all();
-        $user = User::findOrFail($id);
-
-        $user->syncPermissions($data['permission']);
-
-        return redirect()->back();
+        try {
+            $request->validate([
+                'permission' =>'required',
+            ]);
+    
+            $data = $request->all();
+            $user = User::findOrFail($id);
+    
+            $user->syncPermissions($data['permission']);
+            Alert::success('Success', __('text.success_save'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_delete').'. '.$th->getMessage());
+            return to_route('permissions.index');
+        }
+        
     }
 }

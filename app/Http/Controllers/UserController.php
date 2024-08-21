@@ -6,17 +6,25 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
+use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
      */
+    public static function middleware(): array
+    {
+        return [
+            'role_or_permission: Super Admin|users',
+        ];
+    }
     public function index()
     {
         //
@@ -43,22 +51,24 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        // $user->syncRoles($request->role);
-
-
-        return to_route('users.index')->with('messagesuccess','Registro criado com sucesso');;
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+            Alert::success('Success', __('text.success_save'));
+            return to_route('users.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_save').'. '.$th->getMessage());
+            return to_route('users.index'); 
+        }
+        
     }
 
     /**
@@ -89,29 +99,29 @@ class UserController extends Controller
     public function update(Request $request, string $id) : RedirectResponse
     {
         //
-        $data = $request->all();
+        try {
+            $data = $request->all();
 
         $user = User::findOrFail($id);
-
-
-
         if(isset($data['password']) ){
             $request->validate([
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
             $data['password'] = Hash::make($request->password);
         }
-
-
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $data['password'] ? $data['password'] : Hash::make($request->password),
         ]);
 
-        // $user->syncRoles($request->role);
-
-        return to_route('users.index')->with('messagesuccess','Registro criado com sucesso');;
+        Alert::success('Success', __('text.success_update'));
+        return to_route('users.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_update').'. '.$th->getMessage());
+            return to_route('users.index'); 
+        }
+        
     }
 
     /**
@@ -120,8 +130,15 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-        $users = User::findOrFail($id);
-        $users->delete();
-        return to_route('users.index');
+        try {
+            $users = User::findOrFail($id);
+            $users->delete();
+            Alert::success('Success', __('text.success_delete'));
+            return to_route('users.index');
+        } catch (\Throwable $th) {
+            Alert::error('Error', __('text.error_delete').'. '.$th->getMessage());
+            return to_route('users.index'); 
+        }
+        
     }
 }

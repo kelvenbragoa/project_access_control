@@ -11,4 +11,7 @@ return [
     'password' => 'Palavra passe',
     'password_confirmation' => 'Confirmação da palavra passe',
     'mobile' => 'Telefone',
+    'success_save'=>'Registro salvo com sucesso',
+    'success_update'=>'Registro atualizado com sucesso',
+    'success_delete'=>'Registro excluido com sucesso',
 ];
